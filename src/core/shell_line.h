@@ -7,6 +7,8 @@ public:
   void format_line();
   void add_history();
   void sys_exec();
+  bool intern();
+  void intern_exec();
 
   std::string& get_line();
 private:

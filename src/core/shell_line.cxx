@@ -1,4 +1,5 @@
 #include "shell_line.h"
+#include "../format/format.h"
 #include "prompt.h"
 #include <readline/readline.h>
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdlib>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <extr/cpp.hxx>
 
 void line::get_line_stdin() {
   std::string prompt = get_prompt();
@@ -16,9 +18,7 @@ void line::get_line_stdin() {
   std::free(line);
 }
 
-std::string& line::get_line() {
-  return std::ref(this->line);
-}
+std::string& line::get_line() { return std::ref(this->line); }
 
 void line::sys_exec() {
   size_t argv_count = 0;
@@ -42,3 +42,5 @@ void line::sys_exec() {
 
   extr::_core_free_split_arr(argv, argv_count);
 }
+
+void line::format_line() { extr::call_except(format_shell_line, std::ref(this->line)); }
