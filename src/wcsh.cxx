@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
   while (true) {
     sh_line.get_line_stdin();
     if (sh_line.get_line() == "exit") break;
+    if (sh_line.get_line().empty()) continue;
 
     sh_line.sys_exec();
   }

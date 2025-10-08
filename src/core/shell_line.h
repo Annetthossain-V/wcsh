@@ -11,4 +11,5 @@ public:
   std::string& get_line();
 private:
   std::string line;
+  int exit_stat;
 };
