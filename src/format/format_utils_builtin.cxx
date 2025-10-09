@@ -5,10 +5,10 @@
 #include <spdlog/spdlog.h>
 #include "expr.h"
 
-std::string format_cd(std::string line) {
+void format_cd(std::vector<std::string>& line) {
   auto tokens = extr::split_tokens_cxx(line, " ");
   if (tokens.empty()) throw std::runtime_error("tokens empty");
-  
+
   if (tokens.size() != 2) {
     spdlog::error("invalid arguments for cd");
     throw std::runtime_error("error format_cd");
@@ -17,7 +17,7 @@ std::string format_cd(std::string line) {
   return tokens[1];
 }
 
-std::string format_let(std::string line) {
+void format_let(std::vector<std::string>& line) {
   auto tokens = extr::split_tokens_cxx(line, " */+-=");
   if (tokens.empty()) throw std::runtime_error("tokens empty");
 

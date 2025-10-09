@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class line {
 public:
@@ -14,6 +15,7 @@ public:
   std::string& get_line();
 private:
   std::string str;
+  std::vector<std::string> tokens;
   int exit_stat;
   bool file_open;
 };

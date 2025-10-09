@@ -18,15 +18,9 @@ static inline void replace_home(std::vector<std::string>& lines) {
 
 static inline void replace_alias(std::vector<std::string>& lines);
 
-void format_shell_line(std::string& line) {
-  std::vector<std::string> lines = extr::split_tokens_cxx(line, " ");
+void format_shell_line(std::vector<std::string>& lines) {
   if (lines.empty()) throw std::runtime_error("unable to split line");
-  
+
   replace_home(lines);
 
-  line.clear();
-  for (auto& ln : lines) { 
-    line.append(ln); 
-    line.push_back(' '); 
-  }
 }
