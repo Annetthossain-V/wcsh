@@ -9,20 +9,24 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <extr/cpp.hxx>
+#include "../format/format_utils_builtin.h"
+#include "../util/builtin.h"
+#include <spdlog/spdlog.h>
+#include <readline/history.h>
 
 void line::get_line_stdin() {
   std::string prompt = get_prompt();
   char* line = readline(prompt.c_str());
 
-  this->line = line;
+  this->str = line;
   std::free(line);
 }
 
-std::string& line::get_line() { return std::ref(this->line); }
+std::string& line::get_line() { return std::ref(this->str); }
 
 void line::sys_exec() {
   size_t argv_count = 0;
-  char** argv = extr::split_tokens(this->line.c_str(), " ", &argv_count);
+  char** argv = extr::split_tokens(this->str.c_str(), " ", &argv_count);
   if (argv == NULL)
     return;
 
@@ -43,4 +47,44 @@ void line::sys_exec() {
   extr::_core_free_split_arr(argv, argv_count);
 }
 
-void line::format_line() { extr::call_except(format_shell_line, std::ref(this->line)); }
+bool line::format_line() { 
+  try {
+    format_shell_line(this->str);
+  } catch (...) {
+    spdlog::error("formatting line failed");
+    return false;
+  }
+  return true;
+}
+
+bool line::intern() {
+  auto split = extr::split_tokens_cxx(this->str, " ");
+  
+  if (split[0] == "cd")
+    return true;
+
+ return false; 
+}
+
+void line::intern_exec() {
+  auto split = extr::split_tokens_cxx(this->str, " ");
+
+  if (split[0] == "cd") {
+    try {
+      auto tok = format_cd(this->str);
+      builtin_cd(tok);
+    } catch(...) {
+      spdlog::error("parsing cd failed");
+    }
+  }
+
+  return;
+}
+
+void line::add_history() {
+  ::add_history(this->str.c_str());
+}
+
+line::line() {
+  rl_initialize();
+}

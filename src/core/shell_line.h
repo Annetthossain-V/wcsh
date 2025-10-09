@@ -2,9 +2,10 @@
 #include <string>
 
 class line {
-public:  
+public:
+  line();
   void get_line_stdin();
-  void format_line();
+  bool format_line();
   void add_history();
   void sys_exec();
   bool intern();
@@ -12,6 +13,7 @@ public:
 
   std::string& get_line();
 private:
-  std::string line;
+  std::string str;
   int exit_stat;
+  bool file_open;
 };

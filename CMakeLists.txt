@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(wcsh CXX)
 
-file(GLOB SRCS "src/*.cxx" "src/core/*.cxx" "src/format/*.cxx" "src/var/*.cxx" )
+file(GLOB SRCS "src/*.cxx" "src/core/*.cxx" "src/format/*.cxx" "src/var/*.cxx" "src/util/*.cxx" )
 
 add_executable(${PROJECT_NAME} ${SRCS})
 
