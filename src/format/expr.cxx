@@ -15,7 +15,7 @@ std::string expr_assign_val(std::vector<std::string>& toks, size_t pos) {
 bool valid_double(const std::string& s) {
   for (size_t i = 0; i < s.size(); i++) {
     char c = s[i];
-    if (c != '.' && c < '0' || (c != '.' && c > '9'))
+    if ((c != '.' && c < '0') || (c != '.' && c > '9'))
       return false;
   }
   return true;

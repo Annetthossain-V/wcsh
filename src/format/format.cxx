@@ -6,7 +6,7 @@
 #include <print>
 #include <cstdlib>
 
-static inline void replace_home(std::vector<std::string>& lines) {
+static void replace_home(std::vector<std::string>& lines) {
   std::string home = std::getenv("HOME");
   for (auto& line : lines) {
     for (size_t pos = 0; (pos = line.find('~', pos)) != std::string::npos; ) {
@@ -16,7 +16,9 @@ static inline void replace_home(std::vector<std::string>& lines) {
   }
 }
 
-static inline void replace_alias(std::vector<std::string>& lines);
+static void replace_alias(std::vector<std::string>& lines);
+
+static void set_variable(std::vector<std::string>& lines);
 
 void format_shell_line(std::vector<std::string>& lines) {
   if (lines.empty()) throw std::runtime_error("unable to split line");
