@@ -62,6 +62,8 @@ bool line::intern() {
   
   if (split[0] == "cd")
     return true;
+  else if (split[0] == "let")
+    return true;
 
  return false; 
 }
@@ -77,14 +79,19 @@ void line::intern_exec() {
       spdlog::error("parsing cd failed");
     }
   }
+  else if (split[0] == "let") {
+    try {
+      auto tok = format_let(this->str);
+
+      builtin_let(tok);
+    } catch (...) {
+      spdlog::error("unable to make variable");
+    }
+  }
 
   return;
 }
 
-void line::add_history() {
-  ::add_history(this->str.c_str());
-}
+void line::add_history() { ::add_history(this->str.c_str()); }
 
-line::line() {
-  rl_initialize();
-}
+line::line() { rl_initialize(); }
