@@ -1,9 +1,7 @@
 #include "format_utils_builtin.h"
 #include <stdexcept>
 #include <string>
-#include <extr/extr_string.h>
 #include <spdlog/spdlog.h>
-#include "expr.h"
 
 std::string format_cd(std::vector<std::string>& line) {
   if (line.empty()) throw std::runtime_error("tokens empty");
@@ -16,8 +14,9 @@ std::string format_cd(std::vector<std::string>& line) {
   return line[1];
 }
 
-std::string format_let(std::vector<std::string>& line) {
+std::string format_let(std::vector<std::string>& line, std::string& name) {
   auto& tokens = line;
+  std::string retval = "";
   if (tokens.empty()) throw std::runtime_error("tokens empty");
 
   if (tokens.size() < 4) {
@@ -44,12 +43,11 @@ std::string format_let(std::vector<std::string>& line) {
           throw std::runtime_error("cannot assign token to variable");
       }
     }
-
-    return val;
+    retval = val;
   } else if (tokens.size() > 4) {
-    auto val = expr_assign_val(tokens, 3);
-    return val;
+    spdlog::warn("expr not supported yet");
   }
 
-  return "";
+  name = tokens[1];
+  return retval;
 }

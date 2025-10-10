@@ -8,7 +8,8 @@ static std::map<std::string, std::string> vtable;
 
 void var::make_var(std::string name, std::string val) {
   auto [iter, status] = vtable.insert_or_assign(name, val);
-  if (!status) throw std::runtime_error("failed to insert variable");
+  // if (!status) throw std::runtime_error("failed to insert variable");
+  // not needed because overide also throws the exception
 }
 
 void var::delete_var(std::string name) {

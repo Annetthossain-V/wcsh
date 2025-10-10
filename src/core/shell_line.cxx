@@ -28,8 +28,11 @@ std::string& line::get_line() { return std::ref(this->str); }
 
 void line::sys_exec() {
   char** argv = (char**) std::malloc(this->tokens.size() * sizeof(char*));
+  size_t argv_count = 0;
   for (size_t i = 0; i < tokens.size(); i++) {
-    argv[i] = this->tokens[i].data();
+    argv[i] = (char*) malloc(strlen(tokens[i].c_str()) + 1);
+    strcpy(argv[i], tokens[i].c_str());
+    argv_count = i;
   }
 
   pid_t child = fork();
@@ -46,7 +49,7 @@ void line::sys_exec() {
     waitpid(child, &this->exit_stat, 0);
   }
 
-  std::free(argv);
+  extr::_core_free_split_arr(argv, argv_count);
 }
 
 bool line::format_line() {
@@ -79,8 +82,9 @@ void line::intern_exec() {
   }
   else if (this->tokens[0] == "let") {
     try {
-      auto tok = format_let(this->tokens);
-      // builtin_let(tok);
+      std::string name = "";
+      auto tok = format_let(this->tokens, name);
+      builtin_let(name, tok);
     } catch (...) {
       spdlog::error("unable to make variable");
     }

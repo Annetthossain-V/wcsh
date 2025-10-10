@@ -12,5 +12,6 @@ void builtin_cd(std::string path) {
 }
 
 void builtin_let(std::string name, std::string val) {
+  name.insert(0, 1, '$');
   var::make_var(name, val);
 }

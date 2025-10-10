@@ -5,6 +5,7 @@
 #include <vector>
 #include <print>
 #include <cstdlib>
+#include "../var/var.h"
 
 static void replace_home(std::vector<std::string>& lines) {
   std::string home = std::getenv("HOME");
@@ -18,11 +19,18 @@ static void replace_home(std::vector<std::string>& lines) {
 
 static void replace_alias(std::vector<std::string>& lines);
 
-static void set_variable(std::vector<std::string>& lines);
+static void replace_variable(std::vector<std::string>& lines) {
+  for (size_t i = 0; i < lines.size(); i++) {
+    if (lines[i][0] != '$') continue;
+   
+    auto val = var::get_val(lines[i]);
+    lines[i] = val;
+  }
+}
 
 void format_shell_line(std::vector<std::string>& lines) {
   if (lines.empty()) throw std::runtime_error("unable to split line");
 
   replace_home(lines);
-
+  replace_variable(lines);
 }
