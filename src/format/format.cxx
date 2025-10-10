@@ -6,6 +6,9 @@
 #include <print>
 #include <cstdlib>
 #include "../var/var.h"
+#include "../var/alias.h"
+#include <extr/extr_string.h>
+#include <print>
 
 static void replace_home(std::vector<std::string>& lines) {
   std::string home = std::getenv("HOME");
@@ -17,7 +20,15 @@ static void replace_home(std::vector<std::string>& lines) {
   }
 }
 
-static void replace_alias(std::vector<std::string>& lines);
+static void replace_alias(std::vector<std::string>& lines) {
+  if (alias::find_alias(lines[0])) {
+    auto alias = alias::get_alias(lines[0]);
+    auto tok_alias = extr::split_tokens_cxx(alias, " ");
+
+    lines.erase(lines.begin());
+    lines.insert(lines.begin(), tok_alias.begin(), tok_alias.end());
+  }
+}
 
 static void replace_variable(std::vector<std::string>& lines) {
   for (size_t i = 0; i < lines.size(); i++) {
@@ -33,4 +44,5 @@ void format_shell_line(std::vector<std::string>& lines) {
 
   replace_home(lines);
   replace_variable(lines);
+  replace_alias(lines);
 }

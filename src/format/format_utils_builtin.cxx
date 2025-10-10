@@ -31,18 +31,6 @@ std::string format_let(std::vector<std::string>& line, std::string& name) {
 
   if (tokens.size() == 4) {
     auto val = tokens[3];
-
-    if (val.size() == 1) {
-      char v = val[0];
-      switch(v) {
-        case '*':
-        case '/':
-        case '+':
-        case '-':
-        case '=':
-          throw std::runtime_error("cannot assign token to variable");
-      }
-    }
     retval = val;
   } else if (tokens.size() > 4) {
     spdlog::warn("expr not supported yet");
@@ -50,4 +38,10 @@ std::string format_let(std::vector<std::string>& line, std::string& name) {
 
   name = tokens[1];
   return retval;
+}
+
+std::string format_alias(std::vector<std::string> &line, std::string &name) {
+  if (line.size() != 3) throw std::runtime_error("invalid args for alias");
+  name = line[1];
+  return line[2];
 }

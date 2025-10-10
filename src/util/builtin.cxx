@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <spdlog/spdlog.h>
 #include "../var/var.h"
+#include "../var/alias.h"
 
 void builtin_cd(std::string path) {
  if (chdir(path.c_str()) != 0) {
@@ -14,4 +15,8 @@ void builtin_cd(std::string path) {
 void builtin_let(std::string name, std::string val) {
   name.insert(0, 1, '$');
   var::make_var(name, val);
+}
+
+void builtin_alias(std::string name, std::string val) {
+  alias::set_alias(name, val);
 }

@@ -2,15 +2,8 @@
 #include "../format/format.h"
 #include "prompt.h"
 #include <readline/readline.h>
-#include <cstdlib>
 #include <extr/extr_string.h>
-#include <unistd.h>
 #include <cstdlib>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <extr/cpp.hxx>
-#include "../format/format_utils_builtin.h"
-#include "../util/builtin.h"
 #include <spdlog/spdlog.h>
 #include <readline/history.h>
 
@@ -23,33 +16,8 @@ void line::get_line_stdin() {
   std::free(line);
 }
 
-std::string& line::get_line() { return std::ref(this->str); }
-
-
-void line::sys_exec() {
-  char** argv = (char**) std::malloc(this->tokens.size() * sizeof(char*));
-  size_t argv_count = 0;
-  for (size_t i = 0; i < tokens.size(); i++) {
-    argv[i] = (char*) malloc(strlen(tokens[i].c_str()) + 1);
-    strcpy(argv[i], tokens[i].c_str());
-    argv_count = i;
-  }
-
-  pid_t child = fork();
-  if (child < 0) {
-    perror("fork");
-    return; //entropy
-  }
-
-  if (child == 0) {
-    execvp(argv[0], argv);
-    perror(argv[0]);
-    std::exit(EXIT_FAILURE);
-  } else {
-    waitpid(child, &this->exit_stat, 0);
-  }
-
-  extr::_core_free_split_arr(argv, argv_count);
+std::string& line::get_line() { 
+  return std::ref(this->str); 
 }
 
 bool line::format_line() {
@@ -62,37 +30,10 @@ bool line::format_line() {
   return true;
 }
 
-bool line::intern() {
-  if (this->tokens[0] == "cd")
-    return true;
-  else if (this->tokens[0] == "let")
-    return true;
-
- return false;
+void line::add_history() { 
+  ::add_history(this->str.c_str()); 
 }
 
-void line::intern_exec() {
-  if (this->tokens[0] == "cd") {
-    try {
-      auto tok = format_cd(this->tokens);
-      builtin_cd(tok);
-    } catch(...) {
-      spdlog::error("parsing cd failed");
-    }
-  }
-  else if (this->tokens[0] == "let") {
-    try {
-      std::string name = "";
-      auto tok = format_let(this->tokens, name);
-      builtin_let(name, tok);
-    } catch (...) {
-      spdlog::error("unable to make variable");
-    }
-  }
-
-  return;
+line::line() { 
+  rl_initialize(); 
 }
-
-void line::add_history() { ::add_history(this->str.c_str()); }
-
-line::line() { rl_initialize(); }
