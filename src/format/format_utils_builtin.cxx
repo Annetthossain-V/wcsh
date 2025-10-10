@@ -45,3 +45,8 @@ std::string format_alias(std::vector<std::string> &line, std::string &name) {
   name = line[1];
   return line[2];
 }
+
+std::string format_readf(std::vector<std::string> &line) {
+  if (line.size() != 2) throw std::runtime_error("invalid args for readf");
+  return line[1];
+}

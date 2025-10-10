@@ -12,6 +12,8 @@ bool line::intern() {
     return true;
   else if (this->tokens[0] == "alias")
     return true;
+  else if (this->tokens[0] == "readf")
+    return true;
 
  return false;
 }
@@ -43,6 +45,15 @@ void line::intern_exec() {
       builtin_alias(name, tok);
     } catch (...) {
       spdlog::error("unable to set alias");
+    }
+  }
+
+  else if (this->tokens[0] == "readf") {
+    try {
+      auto name = format_readf(this->tokens);
+      builtin_readf(name);
+    } catch (...) {
+      spdlog::error("unable to read file");
     }
   }
 

@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <spdlog/spdlog.h>
 #include <readline/history.h>
+#include <fstream>
 
 void line::get_line_stdin() {
   std::string prompt = get_prompt();
@@ -35,5 +36,40 @@ void line::add_history() {
 }
 
 line::line() { 
-  rl_initialize(); 
+  rl_initialize();
+  this->file_mode = false;
+  this->file_eof = false;
+}
+
+line::~line() {
+  if (this->file.is_open())
+    this->file.close();
+}
+
+void line::get_line_io() {
+  if (this->file_mode) {
+    if (this->file.eof()) {
+      this->file_eof = true;
+      return;
+    }
+    std::getline(this->file, this->str);
+  } else {
+    char* ln = readline("> ");
+    this->str = ln;
+    std::free(ln);
+  }
+
+  this->tokens = extr::split_tokens_cxx(this->str, " ");
+}
+
+void line::open_file(std::string name) {
+  this->file_mode = true;
+  this->file.open(name);
+  if (!this->file.is_open()) throw std::runtime_error("Failed to open file");
+}
+
+line& line::operator=(const std::string line) {
+  this->str = line;
+  this->tokens = extr::split_tokens_cxx(this->str, " ");
+  return *this;
 }
