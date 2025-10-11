@@ -7,6 +7,8 @@
 #include "../var/alias.h"
 #include "../core/shell_line.h"
 #include <print>
+#include <utility>
+#include "../core/utility.h"
 
 void builtin_cd(std::string path) {
  if (chdir(path.c_str()) != 0) {
@@ -53,4 +55,33 @@ void builtin_readf(std::string name) {
 
     codes.sys_exec();
   }
+}
+
+static void get_var2_double(std::string& v1, std::string& v2, double& d1, double& d2) {
+  auto str1 = var::get_val(v1);
+  auto str2 = var::get_val(v2);
+
+  if (!valid_float(str1)) {
+    spdlog::error("arg1 must be a valid number");
+    throw std::runtime_error("NAN"); 
+  }
+  if (!valid_float(str2)) {
+    spdlog::error("arg2 must a valid number");
+    throw std::runtime_error("NAN");
+  }
+
+  d1 = std::stod(str1);
+  d2 = std::stod(str2);
+}
+
+void builtin_add(std::string v1, std::string v2) {
+  v1.insert(0, 1, '$');
+  v2.insert(0, 1, '$');
+
+  double val1 = 0;
+  double val2 = 0;
+  get_var2_double(v1, v2, val1, val2);
+
+  double result = val1 + val2;
+  var::make_var(v1, std::to_string(result));
 }

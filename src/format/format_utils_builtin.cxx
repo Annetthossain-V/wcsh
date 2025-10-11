@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <string>
 #include <spdlog/spdlog.h>
+#include <utility>
 
 std::string format_cd(std::vector<std::string>& line) {
   if (line.empty()) throw std::runtime_error("tokens empty");
@@ -49,4 +50,9 @@ std::string format_alias(std::vector<std::string> &line, std::string &name) {
 std::string format_readf(std::vector<std::string> &line) {
   if (line.size() != 2) throw std::runtime_error("invalid args for readf");
   return line[1];
+}
+
+std::pair<std::string, std::string> format_add(std::vector<std::string> &line) {
+  if (line.size() != 3) throw std::runtime_error("invalid args for add");
+  return {line[1], line[2]};
 }

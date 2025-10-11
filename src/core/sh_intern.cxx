@@ -14,6 +14,8 @@ bool line::intern() {
     return true;
   else if (this->tokens[0] == "readf")
     return true;
+  else if (this->tokens[0] == "add")
+    return true;
 
  return false;
 }
@@ -54,6 +56,14 @@ void line::intern_exec() {
       builtin_readf(name);
     } catch (...) {
       spdlog::error("unable to read file");
+    }
+  }
+  else if (this->tokens[0] == "add") {
+    try {
+      auto [v1, v2] = format_add(this->tokens);
+      builtin_add(v1, v2);
+    } catch (...) {
+      spdlog::error("unable to add");
     }
   }
 
