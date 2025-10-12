@@ -56,3 +56,8 @@ std::pair<std::string, std::string> format_add(std::vector<std::string> &line) {
   if (line.size() != 3) throw std::runtime_error("invalid args for add");
   return {line[1], line[2]};
 }
+
+std::vector<std::string> format_if(std::vector<std::string> &line) {
+  if (line.size() != 4) throw std::runtime_error("invalid args for 'if'");
+  return {line[1], line[3], line[2]}; // arg1 arg2 >=
+}

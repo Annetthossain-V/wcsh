@@ -10,6 +10,8 @@
 
 void line::get_line_stdin() {
   std::string prompt = get_prompt();
+  if (this->block_prompt) prompt = "> ";
+
   char* line = readline(prompt.c_str());
 
   this->tokens = extr::split_tokens_cxx(line, " ");
@@ -39,6 +41,7 @@ line::line() {
   rl_initialize();
   this->file_mode = false;
   this->file_eof = false;
+  this->block_prompt = false;
 }
 
 line::~line() {

@@ -19,6 +19,7 @@ public:
   line& operator=(const std::string line);
   std::string& get_line();
   bool file_eof;
+  bool block_prompt;
 private:
   std::string str;
   std::vector<std::string> tokens;

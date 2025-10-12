@@ -16,6 +16,8 @@ bool line::intern() {
     return true;
   else if (this->tokens[0] == "add")
     return true;
+  else if (this->tokens[0] == "if")
+    return true;
 
  return false;
 }
@@ -64,6 +66,15 @@ void line::intern_exec() {
       builtin_add(v1, v2);
     } catch (...) {
       spdlog::error("unable to add");
+    }
+  }
+
+  else if (this->tokens[0] == "if") {
+    try {
+      auto parsed_if = format_if(this->tokens);
+      builtin_if(parsed_if, *this);
+    } catch (...) {
+      spdlog::error("`if` failed");
     }
   }
 

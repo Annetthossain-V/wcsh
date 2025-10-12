@@ -9,6 +9,7 @@
 #include <print>
 #include <utility>
 #include "../core/utility.h"
+#include "../func/cond.h"
 
 void builtin_cd(std::string path) {
  if (chdir(path.c_str()) != 0) {
@@ -84,4 +85,21 @@ void builtin_add(std::string v1, std::string v2) {
 
   double result = val1 + val2;
   var::make_var(v1, std::to_string(result));
+}
+
+static cond eval_cond(std::string& cond) {
+  if (cond == "==") return cond::Equal;
+  else if (cond == "!=") return cond::NotEqual;
+  else if (cond == "<=") return cond::LessOrEqual;
+  else if (cond == ">=") return cond::GreaterOrEqual;
+  else if (cond == ">") return cond::Greater;
+  else if (cond == "<") return cond::Less;
+  else throw std::runtime_error("unknown condition");
+}
+
+void builtin_if(std::vector<std::string> &block, line& sh) {
+  block[1].insert(0, 1, '$');
+  block[0].insert(0, 1, '$');
+  auto cond = eval_cond(block[2]);
+  if_block(block[0], block[1], cond, sh);
 }
