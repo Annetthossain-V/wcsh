@@ -5,9 +5,11 @@
 #include <stdexcept>
 #include <csignal>
 #include <print>
+#include <cstdlib>
+#include "func/cond.h"
 
 static void set_system_var() {
-  var::make_var("$VER", "0.4");
+  var::make_var("$VER", "0.5");
   var::make_var("$SHELL", "wcsh");
   var::make_var("$SH", "wcsh");
 }
@@ -19,7 +21,20 @@ int main(int argc, char** argv) {
   std::signal(SIGINT, SIG_IGN);
   set_system_var();
 
-  // read ~/.wcshrc
+  // read ~/wcshrc
+  {
+    line rc;
+    std::string path = std::getenv("HOME");
+    path.append("/.wcshrc");
+ 
+    try {
+      rc.open_file(path);
+      while (!rc.file_eof) {
+        rc.get_line_io();
+        exec_sh(rc);
+      }
+    } catch (...) {}
+  }
 
   line sh;
   while (true) {
