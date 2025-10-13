@@ -3,6 +3,7 @@
 #include "../format/format_utils_builtin.h"
 #include "../util/builtin.h"
 #include <spdlog/spdlog.h>
+#include <extr/extr_except.hxx>
 
 
 bool line::intern() {
@@ -17,6 +18,10 @@ bool line::intern() {
   else if (this->tokens[0] == "add")
     return true;
   else if (this->tokens[0] == "if")
+    return true;
+  else if (this->tokens[0] == "import")
+    return true;
+  else if (this->tokens[0] == "export")
     return true;
 
  return false;
@@ -75,6 +80,24 @@ void line::intern_exec() {
       builtin_if(parsed_if, *this);
     } catch (...) {
       spdlog::error("`if` failed");
+    }
+  }
+
+  else if (this->tokens[0] == "import") {
+    try {
+      auto [local, global] = format_import(this->tokens);
+      builtin_import(local, global);
+    } catch (const extr::except<std::string>& e) {
+      e.what();
+    }
+  }
+
+  else if (this->tokens[0] == "export") {
+    try {
+      auto [global, local] = format_export(this->tokens);
+      builtin_export(global, local);
+    } catch (const extr::except<std::string>& e) {
+      e.what();
     }
   }
 

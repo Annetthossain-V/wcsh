@@ -7,7 +7,7 @@
 #include <print>
 
 static void set_system_var() {
-  var::make_var("$VER", "0.3");
+  var::make_var("$VER", "0.4");
   var::make_var("$SHELL", "wcsh");
   var::make_var("$SH", "wcsh");
 }
@@ -18,6 +18,8 @@ int main(int argc, char** argv) {
 
   std::signal(SIGINT, SIG_IGN);
   set_system_var();
+
+  // read ~/.wcshrc
 
   line sh;
   while (true) {

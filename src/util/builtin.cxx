@@ -1,4 +1,5 @@
 #include "builtin.h"
+#include <cstring>
 #include <stdexcept>
 #include <string>
 #include <unistd.h>
@@ -10,6 +11,8 @@
 #include <utility>
 #include "../core/utility.h"
 #include "../func/cond.h"
+#include <cstdlib>
+#include <extr/extr_except.hxx>
 
 void builtin_cd(std::string path) {
  if (chdir(path.c_str()) != 0) {
@@ -102,4 +105,18 @@ void builtin_if(std::vector<std::string> &block, line& sh) {
   block[0].insert(0, 1, '$');
   auto cond = eval_cond(block[2]);
   if_block(block[0], block[1], cond, sh);
+}
+
+void builtin_import(std::string local, std::string global) {
+  char* globl_env = std::getenv(global.c_str());
+  if (globl_env == nullptr) throw extr::except<std::string>("unable to find global var");
+
+  var::make_var(local, globl_env);
+}
+
+void builtin_export(std::string global, std::string local) {
+  char* env_val = (char*) std::malloc(local.size() + 1);
+  std::strcpy(env_val, local.c_str());
+
+  setenv(global.c_str(), env_val, 1);
 }

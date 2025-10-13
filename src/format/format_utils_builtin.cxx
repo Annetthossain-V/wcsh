@@ -3,6 +3,7 @@
 #include <string>
 #include <spdlog/spdlog.h>
 #include <utility>
+#include <extr/extr_except.hxx> 
 
 std::string format_cd(std::vector<std::string>& line) {
   if (line.empty()) throw std::runtime_error("tokens empty");
@@ -60,4 +61,17 @@ std::pair<std::string, std::string> format_add(std::vector<std::string> &line) {
 std::vector<std::string> format_if(std::vector<std::string> &line) {
   if (line.size() != 4) throw std::runtime_error("invalid args for 'if'");
   return {line[1], line[3], line[2]}; // arg1 arg2 >=
+}
+
+std::pair<std::string, std::string> format_import(std::vector<std::string>& line) {
+  // import local GLOBAL
+  if (line.size() != 3) throw extr::except<std::string>("invalid args for `import`");
+  line[1].insert(0, 1, '$');
+  return {line[1], line[2]};
+}
+
+std::pair<std::string, std::string> format_export(std::vector<std::string>& line) {
+  // export GLOABAL local
+  if (line.size() != 3) throw extr::except<std::string>("invalid args for `export`");
+  return {line[1], line[2]};
 }
