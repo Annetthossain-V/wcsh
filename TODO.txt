@@ -1,10 +1,11 @@
 Current-Task:
   * implement block types (e.g. 'if', 'while', 'func' etc)
   * complete all math operators 
-  * add way to modify env vars
+  * add custom prompt support
 
 Near-Future:
   * add string modifier functions
 
 Far-Future:
   * add a way for user defined keywords 
+  * add wildcard support
