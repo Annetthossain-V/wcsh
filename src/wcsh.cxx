@@ -9,7 +9,7 @@
 #include "func/cond.h"
 
 static void set_system_var() {
-  var::make_var("$VER", "0.5");
+  var::make_var("$VER", "0.6");
   var::make_var("$SHELL", "wcsh");
   var::make_var("$SH", "wcsh");
 }
