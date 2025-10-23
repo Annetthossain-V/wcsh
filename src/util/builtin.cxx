@@ -120,3 +120,9 @@ void builtin_export(std::string global, std::string local) {
 
   setenv(global.c_str(), env_val, 1);
 }
+
+void builtin_delete(std::string& name) {
+  name.insert(0, 1, '$');
+  var::delete_var(name);
+  return;
+}

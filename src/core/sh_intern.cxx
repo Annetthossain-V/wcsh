@@ -23,6 +23,8 @@ bool line::intern() {
     return true;
   else if (this->tokens[0] == "export")
     return true;
+  else if (this->tokens[0] == "delete")
+    return true;
 
  return false;
 }
@@ -96,6 +98,15 @@ void line::intern_exec() {
     try {
       auto [global, local] = format_export(this->tokens);
       builtin_export(global, local);
+    } catch (const extr::except<std::string>& e) {
+      e.what();
+    }
+  }
+
+  else if (this->tokens[0] == "delete") {
+    try {
+      auto name = format_delete(this->tokens);
+      builtin_delete(name);
     } catch (const extr::except<std::string>& e) {
       e.what();
     }

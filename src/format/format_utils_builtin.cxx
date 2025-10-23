@@ -75,3 +75,8 @@ std::pair<std::string, std::string> format_export(std::vector<std::string>& line
   if (line.size() != 3) throw extr::except<std::string>("invalid args for `export`");
   return {line[1], line[2]};
 }
+
+std::string format_delete(std::vector<std::string>& line) {
+  if (line.size() != 2) throw extr::except<std::string>("invalid args for `delete`");
+  return line[1];
+}
